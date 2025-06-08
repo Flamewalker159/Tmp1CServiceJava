@@ -1,0 +1,697 @@
+openapi: 3.0.3
+info:
+  title: TMP Cars service REST API
+  version: "1.0"
+  description: REST API сервис для интеграции TMP с 1С
+
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер для тестирования
+
+tags:
+  - name: Clients
+    description: Api клиента
+  - name: Vehicles
+    description: Api получения транспорта
+  - name: Telematics
+    description: Api телематических данных
+
+paths:
+  /api/clients:
+    get:
+      summary: Получение списка клиентов
+      description: Получает из БД список клиентов
+      security:
+        - ApiKeyScheme: [ ]
+      responses:
+        200:
+          description: Успешный ответ со списком клиентов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientResponseDto"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+      tags:
+        - Clients
+    post:
+      summary: Создание нового клиента
+      description: Регистрирует нового клиента с указанными данными для доступа к 1С.
+      security:
+        - ApiKeyScheme: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        201:
+          description: Клиент успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreated'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+      tags:
+        - Clients
+  /api/clients/{clientId}:
+    get:
+      summary: Получение клиента по ID
+      description: Возвращает данные клиента по его идентификатору
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      responses:
+        200:
+          description: Успешный ответ с данными клиента
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Clients
+    put:
+      summary: Обновление данных клиента
+      description: Обновляет данные существующего клиента по его идентификатору.
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        200:
+          description: Данные клиента обновлены
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Данные клиента успешно обновлены"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Clients
+    delete:
+      summary: Удаление клиента
+      description: Удаляет клиента по его идентификатору.
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      responses:
+        204:
+          $ref: "#/components/responses/NoContent"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Clients
+  /api/clients/test:
+    post:
+      summary: Проверка соединения с сервером 1С
+      description: Отправляет запрос на сервер 1С для проверка соединения
+      security:
+        - ApiKeyScheme: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        200:
+          description: Ответ от сервера 1С.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Соединение установлено."
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Clients
+  
+  /api/clients/{clientId}/vehicles:
+    get:
+      summary: Получение списка транспортных средств из 1С
+      description: Возвращает список транспортных средств, связанных с пользователем, по его идентификатору.
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      responses:
+        200:
+          description: Успешный ответ со списком транспортных средств
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        404:
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Vehicles
+    post:
+      summary: Добавление транспортного средства
+      description: Добавляет новое транспортное средство для клиента в 1С
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleDto'
+      responses:
+        201:
+          description: "Транспортное средство успешно создано"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Vehicles
+  /api/clients/{clientId}/vehicles/{vehicleCode1C}:
+    get:
+      summary: Получение транспортного средства по коду
+      description: Возвращает данные транспортного средства по его коду из 1С
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+        - $ref: '#/components/parameters/vehicleCode1C'
+      responses:
+        200:
+          description: Успешный ответ с данными транспортного средства
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Vehicles
+    put:
+      summary: Обновить данные транспортного средства
+      description: Обновляет информацию о транспортном средстве в 1С
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+        - $ref: "#/components/parameters/vehicleCode1C"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleUpdateDto"
+      responses:
+        200:
+          description: Данные ТС успешно обновлены
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Данные ТС успешно обновлены"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+      tags:
+        - Vehicles
+  /api/clients/{clientId}/telematicsData/{vehicleCode1C}:
+    post:
+      summary: Передача телематических данных в 1С
+      description: Отправляет телематические данные ТС в систему 1С
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+        - $ref: '#/components/parameters/vehicleCode1C'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelematicsDataDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TelematicsDataDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TelematicsDataDto'
+      responses:
+        200:
+          description: Данные успешно приняты
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Данные успешно приняты"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Telematics
+components:
+  parameters:
+    clientId:
+      name: clientId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Идентификатор клиента 1С
+      example: "e6be2638-a390-4895-9d30-7d87807ba443"
+    vehicleCode1C:
+      name: vehicleCode1C
+      in: path
+      required: true
+      description: Код транспортного средства в 1С
+      schema:
+        type: string
+        example: "000000001"
+  
+  responses:
+    NoContent:
+      description: Операция выполнена, данные удалены
+    BadRequestError:
+      description: Некорректный запрос.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Error: Bad Request"
+    UnauthorizedError:
+      description: Ошибка авторизации. API-ключ отсутствует или недействителен.
+      content:
+        application/json:
+          example: "Error: Unauthorized"
+    NotFoundError:
+      description: Ресурс не найден
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "error"
+    InternalServerError:
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              status:
+                type: integer
+                format: int32
+              title:
+                type: string
+              detail:
+                type: string
+              instance:
+                type: string
+  
+  schemas:
+    ClientDto:
+      type: object
+      required:
+        - login
+        - url1C
+      properties:
+        login:
+          type: string
+          minLength: 1
+          example: "User1c"
+        password:
+          type: string
+          nullable: true
+          example: "qweasd123"
+        url1C:
+          type: string
+          minLength: 1
+          example: "http://localhost/InfoBase"
+      additionalProperties: false
+    ClientResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "e6be2638-a390-4895-9d30-7d87807ba443"
+        login:
+          type: string
+          example: "User1c"
+        password:
+          type: string
+          nullable: true
+          example: "qweasd123"
+        url1C:
+          type: string
+          example: "http://localhost/InfoBase"
+      additionalProperties: false
+    UserCreated:
+      type: object
+      properties:
+        id1c:
+          type: string
+          format: uuid
+          example: "e6be2638-a390-4895-9d30-7d87807ba443"
+    VehicleDto:
+      type: object
+      required:
+        - code1C
+        - name
+        - licensePlate
+        - vin
+        - brand
+        - model
+        - groupId
+        - yearOfIssue
+        - mass
+        - dimensions
+        - ownershipType
+      properties:
+        code1C:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        licensePlate:
+          type: string
+          nullable: true
+        vin:
+          type: string
+          nullable: true
+        brand:
+          type: string
+          nullable: true
+        model:
+          type: string
+          nullable: true
+        groupId:
+          type: string
+          nullable: true
+        yearOfIssue:
+          type: string
+          format: date-time
+        mass:
+          type: integer
+          format: int32
+        dimensions:
+          type: string
+          nullable: true
+        ownershipType:
+          type: string
+          nullable: true
+        chassisNumber:
+          type: string
+          nullable: true
+        engineNumber:
+          type: string
+          nullable: true
+        engineModel:
+          type: string
+          nullable: true
+        powerEngineInLs:
+          type: string
+          nullable: true
+        powerEngineInKvt:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        code1C: "000000001"
+        name: "Грузовик Volvo FH16"
+        licensePlate: "А123ВС 77"
+        vin: "YV2R0A1A9JA123456"
+        brand: "Volvo"
+        model: "FH16"
+        groupId: "TRUCKS-001"
+        yearOfIssue: "2023-06-15T00:00:00Z"
+        mass: 18000
+        dimensions: "6.1 x 2.5 x 3.2 м"
+        ownershipType: "Собственность"
+        chassisNumber: "CH123456789"
+        engineNumber: "ENG987654321"
+        engineModel: "D16G"
+        powerEngineInLs: "750"
+        powerEngineInKvt: "551"
+    
+    VehicleUpdateDto:
+      type: object
+      required:
+        - licensePlate
+        - mass
+      properties:
+        licensePlate:
+          type: string
+          description: Государственный номер
+          example: "А123ВС 777"
+        mass:
+          type: integer
+          description: Масса автомобиля в кг
+          example: 1500
+        dimensions:
+          type: string
+          description: Габариты автомобиля
+          example: "4.5 x 1.8 x 1.6 м"
+        chassisNumber:
+          type: string
+          description: Номер шасси
+          example: "1234567890"
+        engineNumber:
+          type: string
+          description: Номер двигателя
+          example: "EN-98765"
+        engineModel:
+          type: string
+          description: Модель двигателя
+          example: "V6 Turbo"
+        powerEngineInLs:
+          type: integer
+          description: Мощность двигателя в лошадиных силах
+          example: 300
+        powerEngineInKvt:
+          type: integer
+          description: Мощность двигателя в киловаттах
+          example: 220
+    
+    TelematicsDataDto:
+      type: object
+      properties:
+        gps:
+          $ref: "#/components/schemas/GpsDto"
+        can:
+          $ref: "#/components/schemas/CanDto"
+      required:
+        - gps
+        - can
+    
+    GpsDto:
+      type: object
+      description: Данные GPS
+      properties:
+        Longitude:
+          type: integer
+          format: int64
+          description: Долгота в угловых секундах
+          maximum: 360000
+          minimum: -360000
+          example: 129600
+        Latitude:
+          type: integer
+          format: int64
+          description: Широта в угловых секундах
+          maximum: 360000
+          minimum: -360000
+          example: 64800
+        Altitude:
+          type: integer
+          format: int32
+          description: Высота
+          example: 150
+        Course:
+          type: integer
+          format: int32
+          description: Курс
+          example: 90
+        SatellitesAmount:
+          type: integer
+          format: int32
+          description: Число найденных спутников
+          example: 12
+        Validity:
+          type: integer
+          format: int32
+          description: Валидность навигационных данных (0 - не валидны, 1 - валидны)
+          example: 1
+        GnssTimestamp:
+          type: integer
+          format: int64
+          description: Дата-время по спутнику
+          example: 1743024026000
+        Timestamp:
+          type: integer
+          format: int64
+          description: Дата-время формирования сообщения бортовым устройством
+          example: 1743024026000
+        GsmCellMonitor:
+          type: integer
+          format: int32
+          nullable: true
+          description: Мониторинг GSM-ячейки
+          example: 25
+        Speed:
+          type: integer
+          format: int32
+          description: Скорость
+          example: 60
+        AccVoltage:
+          type: integer
+          format: int32
+          description: Напряжение батареи бортовой сети
+          example: 12000
+        AirbagFired:
+          type: boolean
+          description: Сработала ли подушка безопасности
+          example: false
+        Odometer:
+          type: integer
+          format: int32
+          description: Показания одометра
+          example: 150000
+        IgnitionStatus:
+          type: boolean
+          description: Статус включенного зажигания
+          example: true
+        PowerStatus:
+          type: boolean
+          description: Статус исправности батареи
+          example: true
+    CanDto:
+      type: object
+      description: Данные CAN-шины
+      properties:
+        Speed:
+          type: integer
+          format: int32
+          description: Скорость
+          example: 65
+        RemainingMileage:
+          type: integer
+          format: int32
+          description: Пробег до сервисного обслуживания
+          example: 5000
+        FuelLevel:
+          type: integer
+          format: int32
+          description: Уровень топлива
+          example: 75
+        FuelConsumption:
+          type: integer
+          format: int32
+          description: Расход топлива
+          example: 85
+        CoolantTemp:
+          type: integer
+          format: int32
+          description: Температура охлаждающей жидкости
+          example: 90
+        EngineOilPressure:
+          type: integer
+          format: int32
+          description: Давление масла в двигателе
+          example: 35
+        OnboardPowerVoltage:
+          type: integer
+          format: int32
+          description: Напряжение бортовой сети
+          example: 13800
+        MaxRpm:
+          type: integer
+          format: int32
+          description: Максимальные обороты двигателя
+          example: 3000
+        CoolantLevelLow:
+          type: boolean
+          description: Низкий уровень охлаждающей жидкости
+          example: false
+        GeneratorMalfunction:
+          type: boolean
+          description: Неисправность генератора
+          example: false
+        BreakFluidLowLevel:
+          type: boolean
+          description: Низкий уровень тормозной жидкости
+          example: false
+        GazLevel:
+          type: integer
+          format: int32
+          description: Уровень газа
+          example: 50
+        FuelType:
+          type: integer
+          format: int32
+          description: Тип топлива
+          example: 1
+  securitySchemes:
+    ApiKeyScheme:
+      type: apiKey
+      description: API-ключ для авторизации запросов
+      name: X-API-KEY
+      in: header     

@@ -1,0 +1,84 @@
+# === Java compiled files ===
+*.class
+
+# === Log files ===
+*.log
+
+# === IDE Settings ===
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# NetBeans
+/nbbuild/
+/nbdist/
+/nbproject/private/
+/dist/
+/.nb-gradle/
+
+# Eclipse / Spring Tool Suite
+.classpath
+.project
+.factorypath
+.settings/
+.springBeans
+.sts4-cache
+.apt_generated
+
+# === Build output ===
+/target/
+/build/
+/out/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# === Package files ===
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# === VM crash logs ===
+hs_err_pid*
+replay_pid*
+
+# === Maven ===
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.next
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# === Gradle ===
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# === Config files with secrets ===
+application-local.properties
+application-local.yml
+application-dev.yml
+.env
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Temporary files ===
+*.bak
+*.swp
+
+# === Misc ===
+HELP.md
