@@ -6,22 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 
 public class VehicleDto {
-//    private String Code1C;
-//    private String Name;
-//    private String LicensePlate;
-//    private String Vin;
-//    private String Brand;
-//    private String Model;
-//    private String GroupId;
-//    private LocalDate YearOfIssue;
-//    private int Mass;
-//    private String Dimensions;
-//    private String OwnershipType;
-//    private String ChassisNumber;
-//    private String EngineNumber;
-//    private String EngineModel;
-//    private int PowerEngineInLs;
-//    private int PowerEngineInKvt;
     @JsonAlias("Код")               // для десериализации ищем ключ "Код"
     @JsonProperty("code1C")         // для сериализации используем "code1C"
     private String code1C;
