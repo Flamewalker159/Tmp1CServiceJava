@@ -2,7 +2,9 @@ package com.tmp.tmp1cservice.dtos.TelematicsDTOs;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class CanDto {
 
     @JsonAlias("Speed")

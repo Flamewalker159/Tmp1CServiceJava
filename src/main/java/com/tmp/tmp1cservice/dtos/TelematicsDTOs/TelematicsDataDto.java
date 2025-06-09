@@ -1,7 +1,13 @@
 package com.tmp.tmp1cservice.dtos.TelematicsDTOs;
 
-public class TelematicsDataDto {
-    private GpsDto Gps = new GpsDto();
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-    private CanDto Can = new CanDto();
+@Data
+public class TelematicsDataDto {
+    @JsonProperty("gps")
+    private GpsDto gps;
+
+    @JsonProperty("can")
+    private CanDto can;
 }

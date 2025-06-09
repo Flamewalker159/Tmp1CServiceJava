@@ -2,8 +2,9 @@ package com.tmp.tmp1cservice.dtos.TelematicsDTOs;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.antlr.v4.runtime.misc.NotNull;
+import lombok.Data;
 
+@Data
 public class GpsDto {
     @JsonAlias("Longitude")
     @JsonProperty("Долгота")
