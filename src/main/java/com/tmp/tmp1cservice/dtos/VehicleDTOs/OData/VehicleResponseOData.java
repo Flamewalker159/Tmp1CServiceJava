@@ -1,12 +1,13 @@
-﻿package com.tmp.tmp1cservice.dtos.VehicleDTOs.OData;
+package com.tmp.tmp1cservice.dtos.VehicleDTOs.OData;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleDtoOData;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VehicleResponseOData
 {
     @JsonProperty("value")

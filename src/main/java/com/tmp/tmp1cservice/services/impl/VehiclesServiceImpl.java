@@ -1,9 +1,7 @@
 package com.tmp.tmp1cservice.services.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleDto;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleDto1C;
@@ -18,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.lang.reflect.Type;
-import java.time.ZoneOffset;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.UUID;
 
 @Service

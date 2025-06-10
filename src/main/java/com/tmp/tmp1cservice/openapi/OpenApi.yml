@@ -15,6 +15,8 @@ tags:
     description: Api получения транспорта
   - name: Telematics
     description: Api телематических данных
+  - name: OData
+    description: OData API для интеграции с 1С
 
 paths:
   /api/clients:
@@ -297,6 +299,149 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       tags:
         - Telematics
+
+  # OData
+  /api/clients/{clientId}/vehicles/odata:
+    get:
+      summary: Получение списка транспортных средств через OData
+      description: Возвращает список ТС через OData-интерфейс 1С
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      responses:
+        200:
+          description: Успешный ответ со списком ТС
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleDto'
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        404:
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - OData
+
+    post:
+      summary: Создание транспортного средства через OData
+      description: Создает новое ТС через OData-интерфейс 1С
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleDto'
+      responses:
+        201:
+          description: ТС успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - OData
+
+  /api/clients/{clientId}/vehicles/odata/{refKey}:
+    get:
+      summary: Получение транспортного средства по RefKey
+      description: Возвращает ТС по уникальному RefKey из 1С (OData)
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+        - $ref: '#/components/parameters/refKey'
+      responses:
+        200:
+          description: Успешный ответ с данными ТС
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - OData
+
+    patch:
+      summary: Частичное обновление ТС через OData
+      description: Обновляет информацию о ТС в 1С через OData (PATCH)
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+        - $ref: '#/components/parameters/refKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleUpdateDto"
+      responses:
+        200:
+          description: Данные ТС успешно обновлены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDto'
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+      tags:
+        - OData
+
+  # OData: Отправка телематических данных
+  /api/clients/{clientId}/telematicsData/odata:
+    post:
+      summary: Передача телематических данных через OData
+      description: Отправляет телематические данные в 1С через OData-интерфейс
+      security:
+        - ApiKeyScheme: [ ]
+      parameters:
+        - $ref: '#/components/parameters/clientId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelematicsDataODataDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TelematicsDataODataDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TelematicsDataODataDto'
+      responses:
+        200:
+          description: Данные успешно приняты
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Данные успешно приняты"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - OData
+
 components:
   parameters:
     clientId:
@@ -316,6 +461,15 @@ components:
       schema:
         type: string
         example: "000000001"
+    refKey:
+      name: refKey
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Уникальный RefKey объекта в 1С (OData)
+      example: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
   
   responses:
     NoContent:
@@ -541,6 +695,182 @@ components:
       required:
         - gps
         - can
+    TelematicsDataODataDto:
+      type: object
+      properties:
+        period:
+          type: string
+          format: date-time
+          description: Период данных
+          example: "2025-06-10T10:18:44.646Z"
+        tcKey:
+          type: string
+          format: uuid
+          description: Уникальный ключ транспортного средства
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        longitude:
+          type: integer
+          format: int64
+          description: Долгота в угловых секундах
+          example: 360000
+        latitude:
+          type: integer
+          format: int64
+          description: Широта в угловых секундах
+          example: 360000
+        altitude:
+          type: integer
+          format: int32
+          description: Высота
+          example: 1
+        course:
+          type: integer
+          format: int32
+          description: Курс
+          example: 1
+        satellitesAmount:
+          type: integer
+          format: int32
+          description: Количество спутников
+          example: 1
+        validity:
+          type: boolean
+          description: Валидность данных
+          example: true
+        gnssTimestamp:
+          type: integer
+          format: int64
+          description: Временная метка GNSS
+          example: 1
+        timestamp:
+          type: integer
+          format: int64
+          description: Временная метка данных
+          example: 0
+        gsmCellMonitor:
+          type: integer
+          format: int32
+          description: Мониторинг GSM-ячейки
+          example: 0
+        speedGps:
+          type: integer
+          format: int32
+          description: Скорость по GPS
+          example: 0
+        accVoltage:
+          type: integer
+          format: int32
+          description: Напряжение аккумулятора
+          example: 0
+        airbagFired:
+          type: boolean
+          description: Срабатывание подушки безопасности
+          example: true
+        odometer:
+          type: integer
+          format: int32
+          description: Пробег (одометр)
+          example: 1
+        speedCan:
+          type: integer
+          format: int32
+          description: Скорость по CAN
+          example: 0
+        remainingMileage:
+          type: integer
+          format: int32
+          description: Оставшийся пробег
+          example: 1
+        fuelLevel:
+          type: integer
+          format: int32
+          description: Уровень топлива
+          example: 0
+        fuelConsumption:
+          type: integer
+          format: int32
+          description: Расход топлива
+          example: 0
+        coolantTemp:
+          type: integer
+          format: int32
+          description: Температура охлаждающей жидкости
+          example: 0
+        engineOilPressure:
+          type: integer
+          format: int32
+          description: Давление моторного масла
+          example: 0
+        onboardPowerVoltage:
+          type: integer
+          format: int32
+          description: Напряжение бортовой сети
+          example: 0
+        maxRpm:
+          type: integer
+          format: int32
+          description: Максимальные обороты двигателя
+          example: 0
+        ignitionStatus:
+          type: boolean
+          description: Статус зажигания
+          example: true
+        powerStatus:
+          type: boolean
+          description: Статус питания
+          example: true
+        coolantLevelLow:
+          type: boolean
+          description: Низкий уровень охлаждающей жидкости
+          example: false
+        generatorMalfunction:
+          type: boolean
+          description: Неисправность генератора
+          example: true
+        breakFluidLowLevel:
+          type: boolean
+          description: Низкий уровень тормозной жидкости
+          example: true
+        gazLevel:
+          type: integer
+          format: int32
+          description: Уровень газа
+          example: 0
+        fuelType:
+          type: integer
+          format: int32
+          description: Тип топлива
+          example: 0
+      required:
+        - period
+        - tcKey
+        - longitude
+        - latitude
+        - altitude
+        - course
+        - satellitesAmount
+        - validity
+        - gnssTimestamp
+        - timestamp
+        - speedGps
+        - accVoltage
+        - airbagFired
+        - odometer
+        - speedCan
+        - remainingMileage
+        - fuelLevel
+        - fuelConsumption
+        - coolantTemp
+        - engineOilPressure
+        - onboardPowerVoltage
+        - maxRpm
+        - ignitionStatus
+        - powerStatus
+        - coolantLevelLow
+        - generatorMalfunction
+        - breakFluidLowLevel
+        - gazLevel
+        - fuelType
     
     GpsDto:
       type: object

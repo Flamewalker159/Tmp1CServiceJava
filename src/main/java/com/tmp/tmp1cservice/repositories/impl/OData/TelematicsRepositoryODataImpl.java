@@ -1,16 +1,17 @@
-﻿package com.tmp.tmp1cservice.repositories.impl.OData;
+package com.tmp.tmp1cservice.repositories.impl.OData;
 
 import com.tmp.tmp1cservice.dtos.TelematicsDTOs.OData.TelematicsDataDtoOData;
 import com.tmp.tmp1cservice.exceptions.OneCRequestException;
 import com.tmp.tmp1cservice.models.Client;
 import com.tmp.tmp1cservice.repositories.OData.TelematicsRepositoryOData;
 import com.tmp.tmp1cservice.utils.UrlHelper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
 public class TelematicsRepositoryODataImpl implements TelematicsRepositoryOData {
-    public Mono<String> SendingTelematicsData(Client client, TelematicsDataDtoOData telematicsDataDto) {
+    public Mono<ResponseEntity<String>> SendingTelematicsData(Client client, TelematicsDataDtoOData telematicsDataDto) {
         String url = UrlHelper.telematicsDataUrlOData(client.getUrl1c());
         return UrlHelper.getWebClient(client)
                 .post()
@@ -24,6 +25,6 @@ public class TelematicsRepositoryODataImpl implements TelematicsRepositoryOData 
                                         , String.format(
                                         "Ошибка при отправке телематических данных для клиента %s: %s", client.getId(), body))))
                 )
-                .bodyToMono(String.class);
+                .toEntity(String.class);
     }
 }

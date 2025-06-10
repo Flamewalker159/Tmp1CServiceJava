@@ -1,7 +1,7 @@
-﻿package com.tmp.tmp1cservice.repositories.impl.OData;
+package com.tmp.tmp1cservice.repositories.impl.OData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleDtoOData;
+import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleCreateDtoOData;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleUpdateDto;
 import com.tmp.tmp1cservice.exceptions.OneCRequestException;
 import com.tmp.tmp1cservice.models.Client;
@@ -11,18 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 public class VehicleRepositoryODataImpl implements VehicleRepositoryOData
 {
-    private final ObjectMapper objectMapper;
-
     public Mono<ResponseEntity<String>> getVehiclesFrom1C(Client client)
     {
         String url = UrlHelper.vehiclesUrlOData(client.getUrl1c(), true);
@@ -57,13 +53,13 @@ public class VehicleRepositoryODataImpl implements VehicleRepositoryOData
                 .toEntity(String.class);
     }
 
-    public Mono<ResponseEntity<String>> createVehicleIn1C(Client client, VehicleDtoOData vehicleDtoOdata)
+    public Mono<ResponseEntity<String>> createVehicleIn1C(Client client, VehicleCreateDtoOData vehicleCreateDtoOData)
     {
         String url = UrlHelper.vehiclesUrlOData(client.getUrl1c(), true);
         return UrlHelper.getWebClient(client)
                 .post()
                 .uri(url)
-                .bodyValue(vehicleDtoOdata)
+                .bodyValue(vehicleCreateDtoOData)
                 .retrieve()
                 .onStatus(status -> !status.is2xxSuccessful(),
                         response -> response.bodyToMono(String.class)

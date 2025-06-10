@@ -1,6 +1,6 @@
-﻿package com.tmp.tmp1cservice.repositories.OData;
+package com.tmp.tmp1cservice.repositories.OData;
 
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleDtoOData;
+import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleCreateDtoOData;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleUpdateDto;
 import com.tmp.tmp1cservice.models.Client;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ public interface VehicleRepositoryOData {
 
     Mono<ResponseEntity<String>> getVehicleFrom1C(Client client, UUID refKey);
 
-    Mono<ResponseEntity<String>> createVehicleIn1C(Client client, VehicleDtoOData odataVehicleDto);
+    Mono<ResponseEntity<String>> createVehicleIn1C(Client client, VehicleCreateDtoOData odataVehicleDto);
 
     Mono<ResponseEntity<String>> updateVehicleIn1C(Client client, UUID refKey,
                                                    VehicleUpdateDto updateDto);

@@ -52,10 +52,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     public boolean UpdateClient(ClientDto clientDto, UUID clientId) {
-        log.debug("Обновление клиента {ClientId}", clientId);
+        log.debug("Обновление клиента {}", clientId);
         var client = repo.findById(clientId).orElseThrow(() -> {
             log.error("Клиент {} не найден", clientId);
-            throw new ClientNotFoundException(String.format("Клиент с ID %s не найден.", clientId));
+            return new ClientNotFoundException(String.format("Клиент с ID %s не найден.", clientId));
         });
 
         client.setLogin(clientDto.getLogin());
@@ -71,7 +71,7 @@ public class ClientServiceImpl implements ClientService {
         log.debug("Удаление клиента {}", clientId);
         var client = repo.findById(clientId).orElseThrow(() -> {
             log.error("Клиент {} не найден в БД", clientId);
-            throw new ClientNotFoundException(String.format("Клиент с ID %s не найден в базе данных.", clientId));
+            return new ClientNotFoundException(String.format("Клиент с ID %s не найден в базе данных.", clientId));
         });
         repo.delete(client);
         log.info("Клиент {} успешно удален", clientId);

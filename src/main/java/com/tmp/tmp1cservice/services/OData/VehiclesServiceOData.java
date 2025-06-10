@@ -1,5 +1,6 @@
-﻿package com.tmp.tmp1cservice.services.OData;
+package com.tmp.tmp1cservice.services.OData;
 
+import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleCreateDtoOData;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleDtoOData;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleUpdateDto;
 import reactor.core.publisher.Mono;
@@ -12,7 +13,7 @@ public interface VehiclesServiceOData {
 
     Mono<VehicleDtoOData> getVehicleFrom1C(UUID clientId, UUID refKey);
 
-    Mono<VehicleDtoOData> createVehicleIn1C(UUID clientId, VehicleDtoOData vehicleDto1C);
+    Mono<VehicleCreateDtoOData> createVehicleIn1C(UUID clientId, VehicleCreateDtoOData vehicleCreateDtoOData);
 
     Mono<VehicleDtoOData> updateVehicle1C(UUID clientId, UUID refKey, VehicleUpdateDto updateDto);
 }

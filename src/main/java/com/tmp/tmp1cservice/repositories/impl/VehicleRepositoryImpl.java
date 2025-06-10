@@ -7,19 +7,13 @@ import com.tmp.tmp1cservice.exceptions.OneCRequestException;
 import com.tmp.tmp1cservice.models.Client;
 import com.tmp.tmp1cservice.repositories.VehicleRepository;
 import com.tmp.tmp1cservice.utils.UrlHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
 public class VehicleRepositoryImpl implements VehicleRepository {
-
-    private final ObjectMapper objectMapper;
-
-    public VehicleRepositoryImpl(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     public Mono<ResponseEntity<String>> getVehiclesFrom1C(Client client) {
         String url = UrlHelper.vehiclesUrl(client.getUrl1c());

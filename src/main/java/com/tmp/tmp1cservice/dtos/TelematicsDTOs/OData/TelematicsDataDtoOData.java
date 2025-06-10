@@ -1,98 +1,134 @@
-﻿package com.tmp.tmp1cservice.dtos.TelematicsDTOs.OData;
+package com.tmp.tmp1cservice.dtos.TelematicsDTOs.OData;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.tmp.tmp1cservice.utils.LocalDateTimeTo1CSerializerOData;
+import lombok.Data;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
 public class TelematicsDataDtoOData {
     @JsonProperty("Period")
-    private OffsetDateTime Period;
+    @JsonAlias("period")
+    @JsonSerialize(using = LocalDateTimeTo1CSerializerOData.class)
+    private LocalDateTime Period;
 
     @JsonProperty("ТС_Key")
+    @JsonAlias("tcKey")
     private UUID TcKey;
 
     @JsonProperty("Долгота")
-    public long Longitude;
+    @JsonAlias("longitude")
+    private long Longitude;
 
     @JsonProperty("Широта")
-    public long Latitude;
+    @JsonAlias("latitude")
+    private long Latitude;
 
     @JsonProperty("Высота")
-    public int Altitude;
+    @JsonAlias("altitude")
+    private int Altitude;
 
     @JsonProperty("Курс")
-    public int Course;
+    @JsonAlias("course")
+    private int Course;
 
     @JsonProperty("ЧислоСпутников")
-    public int SatellitesAmount;
+    @JsonAlias("satellitesAmount")
+    private int SatellitesAmount;
 
     @JsonProperty("Валидность")
-    public boolean Validity;
+    @JsonAlias("validity")
+    private boolean Validity;
 
     @JsonProperty("ВремяПоСпутнику")
-    public long GnssTimestamp;
+    @JsonAlias("gnssTimestamp")
+    private long GnssTimestamp;
 
     @JsonProperty("ВремяСообщения")
-    public long Timestamp;
+    @JsonAlias("timestamp")
+    private long Timestamp;
 
     @JsonProperty("УровеньСигналаGSM")
-    public int GsmCellMonitor;
+    @JsonAlias("gsmCellMonitor")
+    private int GsmCellMonitor;
 
     @JsonProperty("СкоростьGPS")
-    public int SpeedGps;
+    @JsonAlias("speedGps")
+    private int SpeedGps;
 
     @JsonProperty("НапряжениеБатареи")
-    public int AccVoltage;
+    @JsonAlias("accVoltage")
+    private int AccVoltage;
 
     @JsonProperty("СработалAirbag")
-    public boolean AirbagFired;
+    @JsonAlias("airbagFired")
+    private boolean AirbagFired;
 
     @JsonProperty("Одометр")
-    public int Odometer;
+    @JsonAlias("odometer")
+    private int Odometer;
 
     @JsonProperty("СкоростьCAN")
-    public int SpeedCan;
+    @JsonAlias("speedCan")
+    private int SpeedCan;
 
     @JsonProperty("ПробегДоСервиса")
-    public int RemainingMileage;
+    @JsonAlias("remainingMileage")
+    private int RemainingMileage;
 
     @JsonProperty("УровеньТоплива")
-    public int FuelLevel;
+    @JsonAlias("fuelLevel")
+    private int FuelLevel;
 
     @JsonProperty("РасходТоплива")
-    public int FuelConsumption;
+    @JsonAlias("fuelConsumption")
+    private int FuelConsumption;
 
     @JsonProperty("ТемператураОЖ")
-    public int CoolantTemp;
+    @JsonAlias("coolantTemp")
+    private int CoolantTemp;
 
     @JsonProperty("ДавлениеМасла")
-    public int EngineOilPressure;
+    @JsonAlias("engineOilPressure")
+    private int EngineOilPressure;
 
     @JsonProperty("НапряжениеБортовойСети")
-    public int OnboardPowerVoltage;
+    @JsonAlias("onboardPowerVoltage")
+    private int OnboardPowerVoltage;
 
     @JsonProperty("МаксОборотыДвигателя")
-    public int MaxRpm;
+    @JsonAlias("maxRpm")
+    private int MaxRpm;
 
     @JsonProperty("ЗажиганиеВключено")
-    public boolean IgnitionStatus;
+    @JsonAlias("ignitionStatus")
+    private boolean IgnitionStatus;
 
     @JsonProperty("СостояниеБатареи")
-    public boolean PowerStatus;
+    @JsonAlias("powerStatus")
+    private boolean PowerStatus;
 
     @JsonProperty("НизкийУровеньОЖ")
-    public boolean CoolantLevelLow;
+    @JsonAlias("coolantLevelLow")
+    private boolean CoolantLevelLow;
 
     @JsonProperty("НеисправностьГенератора")
-    public boolean GeneratorMalfunction;
+    @JsonAlias("generatorMalfunction")
+    private boolean GeneratorMalfunction;
 
     @JsonProperty("НизкийУровеньТормознойЖидкости")
-    public boolean BreakFluidLowLevel;
+    @JsonAlias("breakFluidLowLevel")
+    private boolean BreakFluidLowLevel;
 
     @JsonProperty("УровеньГаза")
-    public int GazLevel;
+    @JsonAlias("gazLevel")
+    private int GazLevel;
 
     @JsonProperty("ТипТоплива")
-    public int FuelType;
+    @JsonAlias("fuelType")
+    private int FuelType;
 }

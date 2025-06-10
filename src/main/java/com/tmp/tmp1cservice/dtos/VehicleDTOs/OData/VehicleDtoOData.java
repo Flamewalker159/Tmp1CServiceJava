@@ -1,59 +1,63 @@
-﻿package com.tmp.tmp1cservice.dtos.VehicleDTOs.OData;
+package com.tmp.tmp1cservice.dtos.VehicleDTOs.OData;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.UUID;
 
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VehicleDtoOData {
     @JsonProperty("Ref_Key")
-    public UUID RefKey;
+    private UUID RefKey;
 
     @JsonProperty("Code")
-    public String Code;
+    private String Code;
 
     @JsonProperty("Description")
-    public String Description;
+    private String Description;
 
     @JsonProperty("ГосНомер")
-    public String LicensePlate;
+    private String LicensePlate;
 
     @JsonProperty("VIN")
-    public String Vin;
+    private String Vin;
 
     @JsonProperty("Марка")
-    public String Brand;
+    private String Brand;
 
     @JsonProperty("Модель")
-    public String Model;
+    private String Model;
 
     @JsonProperty("ГруппаТС")
-    public String Group;
+    private String Group;
 
     @JsonProperty("ГодВыпуска")
-    public Date Year;
+    private Date Year;
 
     @JsonProperty("Масса")
-    public String Mass;
+    private String Mass;
 
     @JsonProperty("Габариты")
-    public String Dimensions;
+    private String Dimensions;
 
     @JsonProperty("ТипВладенияТС")
-    public String OwnershipType;
+    private String OwnershipType;
 
     @JsonProperty("НомерШасси")
-    public String ChassisNumber;
+    private String ChassisNumber;
 
     @JsonProperty("НомерДвигателя")
-    public String EngineNumber;
+    private String EngineNumber;
 
     @JsonProperty("МодельДвигателя")
-    public String EngineModel;
+    private String EngineModel;
 
     @JsonProperty("МощностьДвигателяЛС")
-    public String PowerEngineInLs;
+    private String PowerEngineInLs;
 
     @JsonProperty("МощностьДвигателяКвт")
-    public String PowerEngineInKvt;
+    private String PowerEngineInKvt;
 }

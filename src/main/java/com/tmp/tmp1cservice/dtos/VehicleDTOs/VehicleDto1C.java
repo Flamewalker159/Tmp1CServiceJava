@@ -1,16 +1,12 @@
 package com.tmp.tmp1cservice.dtos.VehicleDTOs;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tmp.tmp1cservice.utils.OffsetDateTimeTo1CSerializer;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Data
 public class VehicleDto1C {
