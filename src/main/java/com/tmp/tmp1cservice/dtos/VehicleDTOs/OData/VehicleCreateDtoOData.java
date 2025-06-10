@@ -1,77 +1,84 @@
-package com.tmp.tmp1cservice.dtos.VehicleDTOs;
+package com.tmp.tmp1cservice.dtos.VehicleDTOs.OData;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.tmp.tmp1cservice.utils.OffsetDateTimeTo1CSerializer;
+import com.tmp.tmp1cservice.utils.LocalDateTimeTo1CSerializerOData;
 import lombok.Data;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-public class VehicleDto1C {
-    @JsonProperty("Код")    // для сериализации
-    @JsonAlias("code1C")    // для десериализации
-    private String code1C;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class VehicleCreateDtoOData {
+    @JsonProperty("Ref_Key")
+    @JsonAlias("refKey")
+    private UUID RefKey;
 
-    @JsonProperty("Наименование")
+    @JsonProperty("Code")
+    @JsonAlias("code1C")
+    private String Code;
+
+    @JsonProperty("Description")
     @JsonAlias("name")
-    private String name;
+    private String Description;
 
     @JsonProperty("ГосНомер")
     @JsonAlias("licensePlate")
-    private String licensePlate;
+    private String LicensePlate;
 
     @JsonProperty("VIN")
     @JsonAlias("vin")
-    private String vin;
+    private String Vin;
 
     @JsonProperty("Марка")
     @JsonAlias("brand")
-    private String brand;
+    private String Brand;
 
     @JsonProperty("Модель")
     @JsonAlias("model")
-    private String model;
+    private String Model;
 
     @JsonProperty("ГруппаТС")
     @JsonAlias("groupId")
-    private String groupId;
+    private String Group;
 
     @JsonProperty("ГодВыпуска")
     @JsonAlias("yearOfIssue")
-    @JsonSerialize(using = OffsetDateTimeTo1CSerializer.class)
-    private OffsetDateTime yearOfIssue;
+    @JsonSerialize(using = LocalDateTimeTo1CSerializerOData.class)
+    private LocalDateTime Year;
 
     @JsonProperty("Масса")
     @JsonAlias("mass")
-    private Integer mass;
+    private String Mass;
 
     @JsonProperty("Габариты")
     @JsonAlias("dimensions")
-    private String dimensions;
+    private String Dimensions;
 
     @JsonProperty("ТипВладенияТС")
     @JsonAlias("ownershipType")
-    private String ownershipType;
+    private String OwnershipType;
 
     @JsonProperty("НомерШасси")
     @JsonAlias("chassisNumber")
-    private String chassisNumber;
+    private String ChassisNumber;
 
     @JsonProperty("НомерДвигателя")
     @JsonAlias("engineNumber")
-    private String engineNumber;
+    private String EngineNumber;
 
     @JsonProperty("МодельДвигателя")
     @JsonAlias("engineModel")
-    private String engineModel;
+    private String EngineModel;
 
     @JsonProperty("МощностьДвигателяЛС")
     @JsonAlias("powerEngineInLs")
-    private Integer powerEngineInLs;
+    private String PowerEngineInLs;
 
     @JsonProperty("МощностьДвигателяКвт")
     @JsonAlias("powerEngineInKvt")
-    private Integer powerEngineInKvt;
+    private String PowerEngineInKvt;
 }

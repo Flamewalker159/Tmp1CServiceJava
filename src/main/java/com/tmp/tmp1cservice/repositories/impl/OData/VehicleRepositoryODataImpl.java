@@ -1,23 +1,27 @@
-package com.tmp.tmp1cservice.repositories.impl;
+package com.tmp.tmp1cservice.repositories.impl.OData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleDto1C;
+import com.tmp.tmp1cservice.dtos.VehicleDTOs.OData.VehicleCreateDtoOData;
 import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleUpdateDto;
 import com.tmp.tmp1cservice.exceptions.OneCRequestException;
 import com.tmp.tmp1cservice.models.Client;
-import com.tmp.tmp1cservice.repositories.VehicleRepository;
+import com.tmp.tmp1cservice.repositories.OData.VehicleRepositoryOData;
 import com.tmp.tmp1cservice.utils.UrlHelper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-@Repository
-public class VehicleRepositoryImpl implements VehicleRepository {
-    @Override
-    public Mono<ResponseEntity<String>> getVehiclesFrom1C(Client client) {
-        String url = UrlHelper.vehiclesUrl(client.getUrl1c());
+import java.util.UUID;
 
+@Slf4j
+@Repository
+public class VehicleRepositoryODataImpl implements VehicleRepositoryOData
+{
+    public Mono<ResponseEntity<String>> getVehiclesFrom1C(Client client)
+    {
+        String url = UrlHelper.vehiclesUrlOData(client.getUrl1c(), true);
         return UrlHelper.getWebClient(client)
                 .get()
                 .uri(url)
@@ -32,9 +36,9 @@ public class VehicleRepositoryImpl implements VehicleRepository {
                 .toEntity(String.class);
     }
 
-    public Mono<ResponseEntity<String>> getVehicleFrom1C(Client client, String vehicleCode1C) {
-        String url = UrlHelper.vehicleUrl(client.getUrl1c(), vehicleCode1C);
-
+    public Mono<ResponseEntity<String>> getVehicleFrom1C(Client client, UUID refKey)
+    {
+        String url = UrlHelper.vehicleUrlOData(client.getUrl1c(), refKey);
         return UrlHelper.getWebClient(client)
                 .get()
                 .uri(url)
@@ -44,41 +48,45 @@ public class VehicleRepositoryImpl implements VehicleRepository {
                                 .flatMap(body -> Mono.error(new OneCRequestException(
                                         response.statusCode().value()
                                         , String.format(
-                                        "Ошибка при получении ТС %s для клиента %s: %s", vehicleCode1C, client.getId(), body))))
+                                        "Ошибка при получении ТС для клиента %s: %s", client.getId(), body))))
                 )
                 .toEntity(String.class);
     }
 
-    public Mono<ResponseEntity<String>> createVehicleIn1C(Client client, VehicleDto1C vehicleDto1C) {
-        String url = UrlHelper.vehiclesUrl(client.getUrl1c());
-
+    public Mono<ResponseEntity<String>> createVehicleIn1C(Client client, VehicleCreateDtoOData vehicleCreateDtoOData)
+    {
+        String url = UrlHelper.vehiclesUrlOData(client.getUrl1c(), true);
         return UrlHelper.getWebClient(client)
                 .post()
                 .uri(url)
-                .bodyValue(vehicleDto1C)
+                .bodyValue(vehicleCreateDtoOData)
                 .retrieve()
                 .onStatus(status -> !status.is2xxSuccessful(),
                         response -> response.bodyToMono(String.class)
                                 .flatMap(body -> Mono.error(new OneCRequestException(
-                                        response.statusCode().value(),
-                                        String.format("Ошибка при создании ТС для клиента %s: %s", client.getId(), body)))))
+                                        response.statusCode().value()
+                                        , String.format(
+                                        "Ошибка при создании ТС для клиента %s: %s", client.getId(), body))))
+                )
                 .toEntity(String.class);
     }
 
-    public Mono<ResponseEntity<String>> updateVehicleIn1C(Client client, String vehicleCode1C,
-                                                          VehicleUpdateDto updateDto) {
-        String url = UrlHelper.vehicleUrl(client.getUrl1c(), vehicleCode1C);
-
+    public Mono<ResponseEntity<String>> updateVehicleIn1C(Client client, UUID refKey,
+        VehicleUpdateDto updateDto)
+    {
+        String url = UrlHelper.vehicleUrlOData(client.getUrl1c(), refKey);
         return UrlHelper.getWebClient(client)
-                .put()
+                .patch()
                 .uri(url)
                 .bodyValue(updateDto)
                 .retrieve()
                 .onStatus(status -> !status.is2xxSuccessful(),
                         response -> response.bodyToMono(String.class)
                                 .flatMap(body -> Mono.error(new OneCRequestException(
-                                        response.statusCode().value(),
-                                        String.format("Ошибка при обновлении ТС %s для клиента %s: %s", vehicleCode1C, client.getId(), body)))))
+                                        response.statusCode().value()
+                                        , String.format(
+                                        "Ошибка при обновлении ТС %s для клиента %s: %s", refKey, client.getId(), body))))
+                )
                 .toEntity(String.class);
     }
 }

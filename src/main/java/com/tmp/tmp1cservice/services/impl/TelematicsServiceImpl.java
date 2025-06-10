@@ -2,8 +2,6 @@ package com.tmp.tmp1cservice.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tmp.tmp1cservice.dtos.TelematicsDTOs.TelematicsDataDto;
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleDto;
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleDto1C;
 import com.tmp.tmp1cservice.exceptions.ClientNotFoundException;
 import com.tmp.tmp1cservice.exceptions.OneCRequestException;
 import com.tmp.tmp1cservice.repositories.ClientRepository;

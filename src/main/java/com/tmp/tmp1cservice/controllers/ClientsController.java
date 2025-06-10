@@ -4,6 +4,7 @@ import com.tmp.tmp1cservice.dtos.ClientDTOs.ClientDto;
 import com.tmp.tmp1cservice.exceptions.BadRequestException;
 import com.tmp.tmp1cservice.models.Client;
 import com.tmp.tmp1cservice.services.impl.ClientServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +14,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/clients")
+@RequiredArgsConstructor
 public class ClientsController {
 
     private final ClientServiceImpl service;
-
-    public ClientsController(ClientServiceImpl service) {
-        this.service = service;
-    }
 
     @GetMapping
     public List<Client> GetClients()

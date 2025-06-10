@@ -1,7 +1,6 @@
 package com.tmp.tmp1cservice.repositories.impl;
 
 import com.tmp.tmp1cservice.dtos.TelematicsDTOs.TelematicsDataDto;
-import com.tmp.tmp1cservice.dtos.VehicleDTOs.VehicleDto1C;
 import com.tmp.tmp1cservice.exceptions.OneCRequestException;
 import com.tmp.tmp1cservice.models.Client;
 import com.tmp.tmp1cservice.repositories.TelematicsRepository;

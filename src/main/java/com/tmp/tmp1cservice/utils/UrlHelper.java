@@ -25,14 +25,6 @@ public class UrlHelper {
         return WebClientWithAuth(client);
     }
 
-    public static String employeesUrl(String url1C) {
-        return url1C + "/hs/employees";
-    }
-
-    public static String employeeUrl(String url1C, String empCode) {
-        return url1C + "/hs/employees/code/" + empCode;
-    }
-
     public static String vehiclesUrl(String url1C) {
         return url1C + "/hs/vehicles";
     }
