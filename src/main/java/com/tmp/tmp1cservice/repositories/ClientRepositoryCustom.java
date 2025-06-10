@@ -1,7 +1,8 @@
 package com.tmp.tmp1cservice.repositories;
 
 import com.tmp.tmp1cservice.dtos.ClientDTOs.ClientDto;
+import reactor.core.publisher.Mono;
 
 public interface ClientRepositoryCustom {
-    boolean testConnection(ClientDto dto);
+    Mono<Boolean> testConnection(ClientDto dto);
 }

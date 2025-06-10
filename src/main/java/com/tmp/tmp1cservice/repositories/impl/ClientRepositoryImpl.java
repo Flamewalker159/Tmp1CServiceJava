@@ -7,6 +7,7 @@ import com.tmp.tmp1cservice.utils.Base64Converter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Repository
 public class ClientRepositoryImpl implements ClientRepositoryCustom {
@@ -18,19 +19,15 @@ public class ClientRepositoryImpl implements ClientRepositoryCustom {
     }
 
     @Override
-    public boolean testConnection(ClientDto dto) {
+    public Mono<Boolean> testConnection(ClientDto dto) {
         String credentials = Base64Converter.convertToBase64(dto.getLogin(), dto.getPassword());
 
-        try {
-            webClient.get()
-                    .uri(dto.getUrl1C())
-                    .header(HttpHeaders.AUTHORIZATION, "Basic " + credentials)
-                    .retrieve()
-                    .toBodilessEntity()
-                    .block();
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка соединения: " + e.getMessage(), e);
-        }
+        return webClient.get()
+                .uri(dto.getUrl1C())
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + credentials)
+                .retrieve()
+                .toBodilessEntity()
+                .map(response -> true)
+                .onErrorResume(e -> Mono.error(new RuntimeException("Ошибка соединения: " + e.getMessage(), e)));
     }
 }

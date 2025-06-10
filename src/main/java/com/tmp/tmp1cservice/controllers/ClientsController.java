@@ -7,8 +7,9 @@ import com.tmp.tmp1cservice.services.impl.ClientServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,20 +21,20 @@ public class ClientsController {
     private final ClientServiceImpl service;
 
     @GetMapping
-    public List<Client> GetClients()
+    public Flux<Client> GetClients()
     {
         return service.GetClients();
     }
 
     @GetMapping("/{clientId}")
-    public Client GetClientId(@PathVariable UUID clientId)
+    public Mono<Client> GetClientId(@PathVariable UUID clientId)
     {
         return service.GetClient(clientId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, UUID> RegisterClients(@RequestBody ClientDto clientDto)
+    public Map<String, Mono<UUID>> RegisterClients(@RequestBody ClientDto clientDto)
     {
         return Map.of("id1c", service.RegisterClient(clientDto));
     }
@@ -53,9 +54,16 @@ public class ClientsController {
     }
 
     @GetMapping("/test")
-    public Map<String, String> testConnection(@RequestBody ClientDto dto) {
-        if (service.testConnection(dto))
-            return Map.of("message", "соединение установлено");
-        throw new BadRequestException(String.format("Не удалось установить соединение с %s", dto.getUrl1C()));
+    public Mono<Map<String, String>> testConnection(@RequestBody ClientDto dto) {
+        return service.testConnection(dto)
+                .flatMap(success -> {
+                    if (success) {
+                        return Mono.just(Map.of("message", "соединение установлено"));
+                    } else {
+                        return Mono.error(new BadRequestException(
+                                String.format("Не удалось установить соединение с %s", dto.getUrl1C())
+                        ));
+                    }
+                });
     }
 }

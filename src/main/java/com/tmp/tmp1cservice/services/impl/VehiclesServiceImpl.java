@@ -35,7 +35,7 @@ public class VehiclesServiceImpl implements VehiclesService {
     public Mono<List<VehicleDto>> getVehiclesFrom1C(UUID clientId) {
         log.debug("Получение списка ТС для клиента {}", clientId);
 
-        return Mono.justOrEmpty(clientRepository.findById(clientId))
+        return clientRepository.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException(String.format("Клиент с ID %s не найден.", clientId))))
                 .flatMap(client -> vehicleRepository.getVehiclesFrom1C(client)
                         .flatMap(stringResponseEntity -> {
@@ -61,7 +61,7 @@ public class VehiclesServiceImpl implements VehiclesService {
     }
 
     public Mono<VehicleDto> getVehicleFrom1C(UUID clientId, String vehicleCode1C) {
-        return Mono.justOrEmpty(clientRepository.findById(clientId))
+        return clientRepository.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException(String.format("Клиент с ID %s не найден.", clientId))))
                 .flatMap(client -> vehicleRepository.getVehicleFrom1C(client, vehicleCode1C)
                         .flatMap(stringResponseEntity -> {
@@ -88,7 +88,7 @@ public class VehiclesServiceImpl implements VehiclesService {
     public Mono<VehicleDto> createVehicleIn1C(UUID clientId, VehicleDto1C vehicleDto1C) {
         log.debug("Создание ТС для клиента {}", clientId);
 
-        return Mono.justOrEmpty(clientRepository.findById(clientId))
+        return clientRepository.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException(
                         String.format("Клиент с ID %s не найден.", clientId))))
                 .flatMap(client -> vehicleRepository.createVehicleIn1C(client, vehicleDto1C)
@@ -120,7 +120,7 @@ public class VehiclesServiceImpl implements VehiclesService {
     public Mono<Void> updateVehicleIn1C(UUID clientId, String vehicleCode1C, VehicleUpdateDto updateDto) {
         log.debug("Обновление ТС {} для клиента {}", vehicleCode1C, clientId);
 
-        return Mono.justOrEmpty(clientRepository.findById(clientId))
+        return clientRepository.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException(
                         String.format("Клиент с ID %s не найден.", clientId))))
                 .flatMap(client -> vehicleRepository.updateVehicleIn1C(client, vehicleCode1C, updateDto)

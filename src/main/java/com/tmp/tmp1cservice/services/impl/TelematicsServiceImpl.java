@@ -25,7 +25,7 @@ public class TelematicsServiceImpl implements TelematicsService {
 
     @Override
     public Mono<ResponseEntity<String>> SendingTelematicsData(UUID clientId, String vehicleCode1C, TelematicsDataDto telematicsDataDto) {
-        return Mono.justOrEmpty(clientRepository.findById(clientId))
+        return clientRepository.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException(
                         String.format("Клиент с ID %s не найден.", clientId))))
                 .flatMap(client -> telematicsRepository.SendingTelematicsData(client, vehicleCode1C, telematicsDataDto)

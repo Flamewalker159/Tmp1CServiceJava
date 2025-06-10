@@ -23,7 +23,7 @@ public class TelematicsServiceODataImpl implements TelematicsServiceOData
 
     public Mono<TelematicsDataDtoOData> sendingTelematicsData(UUID clientId, TelematicsDataDtoOData telematicsDataDto)
     {
-        return Mono.justOrEmpty(clientRepository.findById(clientId))
+        return clientRepository.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException(
                         String.format("Клиент с ID %s не найден.", clientId))))
                 .flatMap(client -> telematicsRepositoryOData.SendingTelematicsData(client, telematicsDataDto)
