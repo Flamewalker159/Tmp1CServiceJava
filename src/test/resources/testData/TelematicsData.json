@@ -1,0 +1,34 @@
+{
+  "gps": {
+    "longitude": 129600,
+    "latitude": 64800,
+    "altitude": 150,
+    "course": 90,
+    "satellitesAmount": 12,
+    "validity": 1,
+    "gnssTimestamp": 17424026000,
+    "timestamp": 1743044000,
+    "speed": 60,
+    "accVoltage": 12000,
+    "ignitionStatus": true,
+    "powerStatus": true,
+    "gsmCellMonitor": 25,
+    "airbagFired": false,
+    "odometer": 150000
+  },
+  "can": {
+    "speed": 65,
+    "remainingMileage": 5000,
+    "fuelLevel": 75,
+    "fuelConsumption": 85,
+    "coolantTemp": 90,
+    "engineOilPressure": 35,
+    "onboardPowerVoltage": 13800,
+    "coolantLevelLow": false,
+    "generatorMalfunction": false,
+    "breakFluidLowLevel": false,
+    "maxRpm": 3000,
+    "gazLevel": 50,
+    "fuelType": 1
+  }
+}
