@@ -34,9 +34,10 @@ public class ClientsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Mono<UUID>> RegisterClients(@RequestBody ClientDto clientDto)
+    public Mono<Map<String, UUID>> RegisterClients(@RequestBody ClientDto clientDto)
     {
-        return Map.of("id1c", service.RegisterClient(clientDto));
+        return service.RegisterClient(clientDto)
+                .map(id -> Map.of("id1c", id));
     }
 
     @PutMapping("/{clientId}")

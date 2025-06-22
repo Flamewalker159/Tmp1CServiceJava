@@ -42,9 +42,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnknown(Exception ex, HttpServletRequest request) {
         return buildResponse(
-                500,
-                "Неизвестная ошибка",
-                "Произошла необработанная ошибка: " + ex.getMessage(),
+                400,
+                "Ошибка",
+                "Произошла ошибка: " + ex.getMessage(),
                 request.getRequestURI()
         );
     }

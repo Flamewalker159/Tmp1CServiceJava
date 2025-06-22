@@ -31,12 +31,11 @@ public class ClientServiceImpl implements ClientService {
                 .switchIfEmpty(((Mono.error(new ClientNotFoundException("Клиент не найден")))));
     }
 
-    @Transactional
     public Mono<UUID> RegisterClient(ClientDto clientDto) {
         return repo.findByLogin(clientDto.getLogin())
                 .flatMap(existing ->
-                        Mono.error(new BadRequestException("Клиент с таким логином уже существует")))
-                .then(
+                        Mono.<UUID>error(new BadRequestException("Клиент с таким логином уже существует")))
+                .switchIfEmpty(
                         Mono.defer(() -> {
                             Client newClient = new Client(
                                     clientDto.getLogin(),
@@ -50,7 +49,6 @@ public class ClientServiceImpl implements ClientService {
                 );
     }
 
-    @Transactional
     public Mono<Boolean> UpdateClient(ClientDto clientDto, UUID clientId) {
         return repo.findById(clientId)
                 .switchIfEmpty(Mono.error(new ClientNotFoundException("Клиент не найден")))
